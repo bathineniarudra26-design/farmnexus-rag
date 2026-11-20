@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>FarmNexus – Circular AgriTech AI</title>
+  <meta name="color-scheme" content="light">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ed: '#0F3D2E', forest: '#133522', sprout: '#10B981',
+            sd: '#059669', sl: '#D1FAE5', amber: '#F59E0B',
+            al: '#FEF3C7', soil: '#582F0E', cream: '#F4EFE6', alab: '#FAF9F6'
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root { color-scheme: light; }
+    body { background:#FAF9F6; color:#1E293B; font-family:'Plus Jakarta Sans',system-ui,sans-serif; }
+    .card { background:#fff; border:1px solid #E2E8F0; border-radius:1rem; transition:all .25s ease; }
+    .card:hover { border-color:#10B981; box-shadow:0 12px 28px -6px rgba(15,61,46,.1); }
+    .lbl { font:700 11px 'JetBrains Mono',monospace; text-transform:uppercase; color:#64748B; display:block; margin-bottom:6px; }
+    .inp { width:100%; background:#fff; border:1px solid #cbd5e1; border-radius:.75rem; padding:.65rem .75rem; font-size:.85rem; font-weight:600; outline:none; transition:border-color .2s; }
+    .inp:focus { border-color:#10B981; box-shadow:0 0 0 3px rgba(16,185,129,0.15); }
+    .num { font-family:'JetBrains Mono',monospace; font-variant-numeric:tabular-nums; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; padding:.7rem 1.25rem; border-radius:.75rem; font-weight:700; font-size:.82rem; background:#0F3D2E; color:#fff; transition:all .2s; cursor:pointer; border:none; }
+    .btn:hover { background:#133522; transform:translateY(-1px); }
+    .btn2 { background:#fff; color:#0F3D2E; border:1px solid #cbd5e1; }
+    .btn2:hover { background:#f8fafc; }
+    @keyframes b { 50%{opacity:.4;} }
+    .beacon { animation:b 2.4s infinite; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════ RIBBON ══════════════════════ -->
+<div class="bg-ed text-cream text-xs py-2 px-4 text-center">
+  <span class="beacon inline-block w-2 h-2 rounded-full bg-sprout mr-2"></span>
+  <span data-i="ribbon"></span>
+</div>
+
+<!-- ══════════════════════ HEADER ══════════════════════ -->
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200">
+  <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
+    <a href="#" class="flex items-center gap-2">
+      <span class="w-9 h-9 rounded-xl bg-ed flex items-center justify-center">
+        <svg class="w-5 h-5 text-sprout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M12 22V7M12 11l4-4M12 15l4-4M12 11L8 7M12 15L8 11M12 7l3-3M12 7L9 4"/>
+        </svg>
+      </span>
+      <span class="text-xl font-extrabold text-ed">FarmNexus <span data-i="brand.sub" class="text-[9px] bg-sl text-ed px-1.5 py-0.5 rounded num font-bold"></span></span>
+    </a>
+    <nav class="hidden lg:flex gap-4 text-xs font-bold text-slate-700">
+      <a href="#intake" class="text-sd hover:text-ed" data-i="nav.intake"></a>
+      <a href="#plant" class="hover:text-ed" data-i="nav.plant"></a>
+      <a href="#prices" class="hover:text-ed" data-i="nav.prices"></a>
+      <a href="#demand" class="hover:text-ed" data-i="nav.demand"></a>
+      <a href="#waste" class="hover:text-ed" data-i="nav.waste"></a>
+      <a href="#agentic" class="hover:text-ed" data-i="nav.agentic"></a>
+      <a href="#sim" class="hover:text-ed" data-i="nav.sim"></a>
+    </nav>
+    <div class="flex items-center gap-2">
+      <div class="flex p-1 rounded-lg bg-slate-100 text-[11px] font-bold">
+        <button id="l-en" onclick="window.farmnexusApp.setLanguage('en')" class="px-2 py-1 rounded bg-white text-ed">English</button>
+        <button id="l-hi" onclick="window.farmnexusApp.setLanguage('hi')" class="px-2 py-1 rounded text-slate-500">हिन्दी</button>
+        <button id="l-te" onclick="window.farmnexusApp.setLanguage('te')" class="px-2 py-1 rounded text-slate-500">తెలుగు</button>
+      </div>
+      <a href="#prices" class="btn hidden sm:inline-flex" data-i="cta"></a>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════ HERO ══════════════════════ -->
+<section class="pt-12 pb-16 bg-gradient-to-b from-white to-cream/40 border-b">
+  <div class="max-w-7xl mx-auto px-4 grid lg:grid-cols-12 gap-10 items-center">
+    <div class="lg:col-span-7 space-y-5">
+      <span class="inline-block px-3 py-1.5 rounded-full bg-sl text-ed text-xs num font-bold" data-i="hero.badge"></span>
+      <h1 data-i="h1" class="text-4xl lg:text-5xl font-extrabold text-ed leading-tight"></h1>
+      <p data-i="sub" class="text-lg text-slate-700 max-w-2xl"></p>
+      <div class="grid grid-cols-3 gap-3">
+        <div class="p-3 bg-white rounded-xl border">
+          <div data-i="hero.kpi1.val" class="text-2xl font-extrabold text-ed num"></div>
+          <div data-i="hero.kpi1.lbl" class="text-[11px] text-slate-600"></div>
+        </div>
+        <div class="p-3 bg-white rounded-xl border">
+          <div data-i="hero.kpi2.val" class="text-2xl font-extrabold text-sd num"></div>
+          <div data-i="hero.kpi2.lbl" class="text-[11px] text-slate-600"></div>
+        </div>
+        <div class="p-3 bg-white rounded-xl border">
+          <div data-i="hero.kpi3.val" class="text-2xl font-extrabold text-soil num"></div>
+          <div data-i="hero.kpi3.lbl" class="text-[11px] text-slate-600"></div>
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <a href="#intake" class="btn px-6 py-3.5" data-i="hero.btn.intake"></a>
+        <a href="https://wa.me/?text=PRICE" target="_blank" class="btn btn2 px-6 py-3.5 border-2 border-ed" data-i="hero.btn.whatsapp"></a>
+      </div>
+      <p data-i="hero.trust" class="text-xs text-slate-600"></p>
+    </div>
+    <!-- Hero Preview Cards -->
+    <div class="lg:col-span-5 space-y-4">
+      <div class="card p-5 border-2">
+        <div class="flex justify-between pb-3 border-b">
+          <b data-i="hero.card1.title" class="num text-xs uppercase text-ed"></b>
+          <span data-i="hero.card1.live" class="px-2 rounded text-[10px] num font-bold bg-sprout text-white"></span>
+        </div>
+        <div data-i="hero.card1.sub" class="mt-3 text-xs text-slate-500"></div>
+        <div class="flex items-baseline gap-2 mt-1">
+          <span class="text-2xl font-extrabold text-ed num">₹31.50/kg</span>
+          <span data-i="hero.card1.mandi" class="px-2 rounded-full text-xs font-bold bg-sl text-sd num"></span>
+        </div>
+        <div class="mt-3 space-y-2 text-xs">
+          <div class="flex justify-between p-2 rounded-lg bg-slate-50">
+            <span data-i="hero.card1.factory"></span>
+            <b class="num">₹23.00 (+14%)</b>
+          </div>
+          <div class="flex justify-between p-2 rounded-lg bg-sl/40">
+            <b data-i="hero.card1.d2c"></b>
+            <b class="num text-sd">₹31.50 (+38%)</b>
+          </div>
+          <div class="flex justify-between p-2.5 rounded-lg bg-amber/10 border border-amber/30">
+            <b data-i="hero.card1.forecast"></b>
+            <b data-i="hero.card1.peak" class="num text-soil"></b>
+          </div>
+        </div>
+      </div>
+      <div class="card p-5 border-2">
+        <div class="flex justify-between pb-3 border-b">
+          <b data-i="hero.card2.title" class="num text-xs uppercase text-soil"></b>
+          <span data-i="hero.card2.tag" class="px-2 rounded text-[10px] num font-bold bg-soil text-white"></span>
+        </div>
+        <p data-i="hero.card2.body" class="text-xs text-slate-600 mt-3"></p>
+        <div class="mt-2 p-2.5 rounded-lg bg-cream text-xs flex justify-between">
+          <b data-i="hero.card2.q" class="text-soil"></b>
+          <b data-i="hero.card2.ans" class="text-ed"></b>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ INTAKE SECTION ══════════════════════ -->
+<section id="intake" class="py-16 bg-white border-b">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center max-w-3xl mx-auto mb-10">
+      <span data-i="intake.badge" class="px-3 py-1 rounded-full bg-sl text-ed text-xs num font-bold uppercase tracking-wider"></span>
+      <h2 data-i="intake.title" class="text-3xl lg:text-4xl font-extrabold text-ed mt-3"></h2>
+      <p data-i="intake.sub" class="text-slate-600 mt-2"></p>
+    </div>
+
+    <!-- Farmer Crop Intake Form -->
+    <div class="bg-alab rounded-3xl p-6 lg:p-8 border-2 border-slate-200 mb-8 shadow-sm">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div>
+          <label data-i="intake.lbl.crop" class="lbl"></label>
+          <select id="intakeCrop" class="inp">
+            <option value="tomato">Tomato</option>
+            <option value="sugarcane">Sugarcane</option>
+            <option value="onion">Onion</option>
+            <option value="paddy">Paddy (Sona Masoori)</option>
+            <option value="chilli">Red Chilli (Teja)</option>
+          </select>
+        </div>
+        <div>
+          <label data-i="intake.lbl.acreage" class="lbl"></label>
+          <input id="intakeAcreage" type="number" min="0.5" max="100" step="0.5" value="1" class="inp">
+        </div>
+        <div>
+          <label data-i="intake.lbl.volume" class="lbl"></label>
+          <input id="intakeVolume" type="number" min="500" max="50000" step="500" value="2000" class="inp">
+        </div>
+        <div>
+          <label data-i="intake.lbl.district" class="lbl"></label>
+          <select id="intakeDistrict" class="inp">
+            <option value="0">Secunderabad, TS</option>
+            <option value="1">Warangal, TS</option>
+            <option value="2">Guntur, AP</option>
+            <option value="3">Nizamabad, TS</option>
+          </select>
+        </div>
+        <div>
+          <label data-i="intake.lbl.season" class="lbl"></label>
+          <select id="intakeSeason" class="inp">
+            <option value="rabi">Rabi (Oct–Mar)</option>
+            <option value="kharif">Kharif (Jun–Oct)</option>
+            <option value="zaid">Zaid (Mar–Jun)</option>
+          </select>
+        </div>
+        <div>
+          <label data-i="intake.lbl.water" class="lbl"></label>
+          <select id="intakeWater" class="inp">
+            <option value="0">Borewell</option>
+            <option value="1">Canal / Drip</option>
+            <option value="-1">Rainfed</option>
+          </select>
+        </div>
+        <div>
+          <label data-i="intake.lbl.soil" class="lbl"></label>
+          <select id="intakeSoil" class="inp">
+            <option value="0">Red (Chalka)</option>
+            <option value="1">Black Cotton</option>
+            <option value="2">Loamy Alluvial</option>
+          </select>
+        </div>
+        <div class="flex items-end">
+          <button onclick="window.farmnexusApp.runCropIntelligence()" class="btn w-full py-3.5 bg-sprout hover:bg-sd text-white shadow-lg">
+            <span class="mr-2">⚡</span><span data-i="intake.btn.submit"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agent Stream Log -->
+    <div id="agentStreamLog" class="p-5 rounded-2xl bg-slate-900 border border-slate-800 text-cream mb-8">
+      <div class="flex items-center gap-2 text-xs font-bold text-sprout mb-2">
+        <span class="inline-block w-2.5 h-2.5 rounded-full bg-sprout animate-pulse"></span>
+        <span data-i="intake.swarm.active"></span>
+      </div>
+      <div id="streamSteps" class="space-y-1.5 font-mono text-[11px] text-slate-300"></div>
+    </div>
+
+    <!-- Playbook Result -->
+    <div id="cropPlaybookResult" class="space-y-8">
+      <!-- Summary Banner -->
+      <div class="p-6 lg:p-8 rounded-3xl bg-gradient-to-r from-ed via-forest to-ed text-white shadow-xl">
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+          <div>
+            <span data-i="pb.badge" class="text-xs uppercase num font-bold text-sprout bg-sprout/20 px-3 py-1 rounded-full"></span>
+            <h3 class="text-3xl font-extrabold mt-2">
+              <span data-i="pb.title.prefix"></span> <span id="pbCropName" class="text-sprout">—</span>
+            </h3>
+            <p data-i="pb.desc" class="text-sm text-cream/90 mt-1 max-w-2xl"></p>
+          </div>
+          <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/20 text-right min-w-[240px]">
+            <span data-i="pb.stacked.label" class="text-xs num text-cream"></span>
+            <div id="pbStackedTotal" class="text-3xl font-extrabold text-sprout num">—</div>
+            <div class="text-xs mt-1 text-slate-200">
+              <span data-i="pb.mandi.label"></span> <span id="pbMandiBaseline" class="num line-through text-slate-300">—</span>
+            </div>
+            <div class="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sprout text-ed text-xs font-bold num">
+              <span id="pbUpliftCash">—</span> (<span id="pbUpliftPct">—</span>)
+            </div>
+          </div>
+        </div>
+        <div id="pbStrategicAlert" class="mt-6 hidden"></div>
+      </div>
+
+      <!-- 4 Agent Cards -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Agronomy -->
+        <div class="card p-6 border-t-4 border-t-sprout flex flex-col justify-between">
+          <div class="space-y-3">
+            <div class="flex justify-between items-center">
+              <span data-i="pb.agro.agent" class="lbl"></span>
+              <span data-i="pb.agro.ds" class="text-[10px] num font-bold bg-sl text-ed px-2 py-0.5 rounded"></span>
+            </div>
+            <h4 data-i="pb.agro.title" class="text-lg font-extrabold text-ed"></h4>
+            <div class="p-3 rounded-xl bg-slate-50 space-y-1.5 text-xs">
+              <div class="flex justify-between">
+                <span data-i="pb.agro.match" class="text-slate-500"></span>
+                <b id="pbAgroScore" class="num text-sd font-bold">—</b>
+              </div>
+              <div class="flex justify-between">
+                <span data-i="pb.agro.profit" class="text-slate-500"></span>
+                <b id="pbAgroProfit" class="num text-ed">—</b>
+              </div>
+            </div>
+            <p id="pbAgroGuidance" class="text-xs text-slate-600 leading-relaxed"></p>
+          </div>
+          <div data-i="pb.agro.foot" class="pt-4 border-t text-[11px] text-sd font-bold"></div>
+        </div>
+        <!-- Market -->
+        <div class="card p-6 border-t-4 border-t-amber flex flex-col justify-between">
+          <div class="space-y-3">
+            <div class="flex justify-between items-center">
+              <span data-i="pb.market.agent" class="lbl"></span>
+              <span data-i="pb.market.ds" class="text-[10px] num font-bold bg-al text-soil px-2 py-0.5 rounded"></span>
+            </div>
+            <h4 data-i="pb.market.title" class="text-lg font-extrabold text-ed"></h4>
+            <div class="p-3 rounded-xl bg-slate-50 space-y-1.5 text-xs">
+              <div class="flex justify-between">
+                <span data-i="pb.market.bench" class="text-slate-500"></span>
+                <b id="pbMandiBench" class="num text-ed">—</b>
+              </div>
+              <div class="flex justify-between">
+                <span data-i="pb.market.glut" class="text-slate-500"></span>
+                <b id="pbGlutStatus" class="num text-amber">—</b>
+              </div>
+            </div>
+            <div id="pbTimingAdvice" class="p-2.5 rounded-xl bg-al text-soil text-xs font-bold leading-snug">—</div>
+          </div>
+          <div data-i="pb.market.foot" class="pt-4 border-t text-[11px] text-soil font-bold"></div>
+        </div>
+        <!-- Procurement -->
+        <div class="card p-6 border-t-4 border-t-ed flex flex-col justify-between">
+          <div class="space-y-3">
+            <div class="flex justify-between items-center">
+              <span data-i="pb.proc.agent" class="lbl"></span>
+              <span data-i="pb.proc.ds" class="text-[10px] num font-bold bg-sl text-ed px-2 py-0.5 rounded"></span>
+            </div>
+            <h4 data-i="pb.proc.title" class="text-lg font-extrabold text-ed"></h4>
+            <div class="p-3 rounded-xl bg-slate-50 space-y-1.5 text-xs">
+              <div class="flex justify-between">
+                <span data-i="pb.proc.factory" class="text-slate-500"></span>
+                <b id="pbFactoryRate" class="num text-ed">—</b>
+              </div>
+              <div class="flex justify-between">
+                <span data-i="pb.proc.d2c" class="text-slate-500"></span>
+                <b id="pbD2CRate" class="num text-sd">—</b>
+              </div>
+            </div>
+            <p id="pbSplitDetail" class="text-xs text-slate-600 leading-relaxed"></p>
+          </div>
+          <div data-i="pb.proc.foot" class="pt-4 border-t text-[11px] text-ed font-bold"></div>
+        </div>
+        <!-- Circular -->
+        <div class="card p-6 border-t-4 border-t-soil flex flex-col justify-between">
+          <div class="space-y-3">
+            <div class="flex justify-between items-center">
+              <span data-i="pb.circ.agent" class="lbl"></span>
+              <span data-i="pb.circ.ds" class="text-[10px] num font-bold bg-amber/20 text-soil px-2 py-0.5 rounded"></span>
+            </div>
+            <h4 data-i="pb.circ.title" class="text-lg font-extrabold text-soil"></h4>
+            <div class="p-3 rounded-xl bg-cream space-y-1.5 text-xs">
+              <div class="flex justify-between">
+                <span data-i="pb.circ.income" class="text-soil"></span>
+                <b id="pbCircularCash" class="num text-sd font-extrabold">—</b>
+              </div>
+            </div>
+            <p id="pbCircularBuyer" class="text-xs text-slate-600 leading-relaxed"></p>
+          </div>
+          <div data-i="pb.circ.foot" class="pt-4 border-t text-[11px] text-soil font-bold"></div>
+        </div>
+      </div>
+
+      <!-- Action Strip -->
+      <div class="p-6 rounded-2xl bg-alab border-2 border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <h4 data-i="pb.cta.title" class="font-extrabold text-ed text-base"></h4>
+          <p data-i="pb.cta.sub" class="text-xs text-slate-600"></p>
+        </div>
+        <div class="flex flex-wrap gap-2.5">
+          <button id="pb.btn.timing" onclick="alert('✓ Alert set!')" class="btn btn2 text-xs" data-i="pb.btn.timing"></button>
+          <button id="pb.btn.split" onclick="alert('✓ Logistics locked!')" class="btn text-xs bg-sprout hover:bg-sd text-white" data-i="pb.btn.split"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ WHAT TO PLANT ══════════════════════ -->
+<section id="plant" class="py-16 bg-white border-b">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center max-w-3xl mx-auto mb-10">
+      <span data-i="plant.badge" class="px-3 py-1 rounded-full bg-sl text-ed text-xs num font-bold uppercase"></span>
+      <h2 data-i="plant.title" class="text-3xl font-extrabold text-ed mt-3"></h2>
+      <p data-i="plant.sub" class="text-slate-600 mt-2"></p>
+    </div>
+    <div class="bg-alab rounded-2xl p-5 border-2 grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div>
+        <label data-i="plant.lbl.district" class="lbl"></label>
+        <select id="pLoc" onchange="window.farmnexusApp.updatePreSowing()" class="inp">
+          <option value="0">Secunderabad, TS</option>
+          <option value="1">Warangal, TS</option>
+          <option value="2">Guntur, AP</option>
+          <option value="3">Nizamabad, TS</option>
+        </select>
+      </div>
+      <div>
+        <label data-i="plant.lbl.season" class="lbl"></label>
+        <select id="pSea" onchange="window.farmnexusApp.updatePreSowing()" class="inp">
+          <option value="rabi">Rabi (Oct–Mar)</option>
+          <option value="kharif">Kharif (Jun–Oct)</option>
+          <option value="zaid">Zaid (Mar–Jun)</option>
+        </select>
+      </div>
+      <div>
+        <label data-i="plant.lbl.water" class="lbl"></label>
+        <select id="pWat" onchange="window.farmnexusApp.updatePreSowing()" class="inp">
+          <option value="0">Borewell</option>
+          <option value="1">Canal / Drip</option>
+          <option value="-1">Rainfed</option>
+        </select>
+      </div>
+      <div>
+        <label data-i="plant.lbl.soil" class="lbl"></label>
+        <select id="pSoil" onchange="window.farmnexusApp.updatePreSowing()" class="inp">
+          <option value="0">Red (Chalka)</option>
+          <option value="1">Black Cotton</option>
+          <option value="2">Loamy Alluvial</option>
+        </select>
+      </div>
+    </div>
+    <div id="plantCards" class="grid md:grid-cols-3 gap-6"></div>
+    <p id="lockMsg" class="text-center text-sm font-bold text-sd mt-5 min-h-[1.5rem]"></p>
+  </div>
+</section>
+
+<!-- ══════════════════════ 3-CHANNEL PRICES ══════════════════════ -->
+<section id="prices" class="py-16 bg-alab border-b">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center max-w-3xl mx-auto mb-10">
+      <span data-i="prices.badge" class="px-3 py-1 rounded-full bg-ed text-white text-xs num font-bold uppercase"></span>
+      <h2 data-i="prices.title" class="text-3xl font-extrabold text-ed mt-3"></h2>
+      <p data-i="prices.sub" class="text-slate-600 mt-2"></p>
+    </div>
+    <div class="card p-5 mb-6 grid md:grid-cols-12 gap-5 items-center">
+      <div class="md:col-span-4">
+        <label data-i="prices.lbl.crop" class="lbl"></label>
+        <select id="cCrop" onchange="window.farmnexusApp.calculateChannels()" class="inp">
+          <option value="tomato">Tomato</option>
+          <option value="sugarcane">Sugarcane</option>
+          <option value="onion">Onion</option>
+          <option value="paddy">Paddy (Sona Masoori)</option>
+          <option value="chilli">Red Chilli (Dry)</option>
+        </select>
+      </div>
+      <div class="md:col-span-5">
+        <div class="flex justify-between">
+          <span data-i="prices.lbl.volume" class="lbl"></span>
+          <b id="vol" class="num text-sm text-ed">2,000 kg</b>
+        </div>
+        <input id="cVol" type="range" min="500" max="10000" step="500" value="2000" oninput="window.farmnexusApp.calculateChannels()" class="w-full accent-ed">
+      </div>
+      <div class="md:col-span-3 bg-sl/40 rounded-xl p-3 text-center">
+        <span data-i="prices.lbl.benchmark" class="lbl"></span>
+        <b id="bench" class="num text-xl text-ed">—</b>
+      </div>
+    </div>
+    <div id="chan" class="grid md:grid-cols-3 gap-6 mb-6"></div>
+    <div class="p-5 rounded-2xl bg-ed text-white flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center mb-8">
+      <div>
+        <b data-i="prices.split.title" class="num text-xs uppercase text-sprout"></b>
+        <p id="split" class="text-sm text-cream mt-1"></p>
+      </div>
+      <button onclick="document.getElementById('lockMsg2').textContent='✓ Done!'" class="px-4 py-2.5 rounded-xl bg-sprout text-ed text-xs font-bold shrink-0" data-i="prices.btn.split"></button>
+    </div>
+    <p id="lockMsg2" class="text-sm font-bold text-sd -mt-5 mb-5 min-h-[1rem]"></p>
+    <div class="card p-6">
+      <div class="flex flex-wrap justify-between items-center gap-3 pb-4 border-b">
+        <h3 data-i="prices.chart.title" class="text-xl font-extrabold text-ed"></h3>
+        <span id="verdict" class="px-3 py-1.5 rounded-xl bg-al text-soil text-xs num font-bold"></span>
+      </div>
+      <div id="chart" class="grid grid-cols-7 gap-2 sm:gap-4 h-48 items-end mt-6 px-2"></div>
+      <div class="grid grid-cols-7 gap-2 text-center text-[11px] num text-slate-500 mt-2 pt-2 border-t">
+        <span data-i="prices.d1"></span>
+        <span data-i="prices.d2"></span>
+        <span data-i="prices.d3"></span>
+        <span data-i="prices.d4"></span>
+        <span data-i="prices.d5"></span>
+        <span data-i="prices.d6"></span>
+        <span data-i="prices.d7"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ BUYER DEMAND ══════════════════════ -->
+<section id="demand" class="py-16 bg-white border-b">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center max-w-3xl mx-auto mb-8">
+      <span data-i="demand.badge" class="px-3 py-1 rounded-full bg-amber/15 text-soil text-[10px] num font-bold uppercase border border-amber/30"></span>
+      <h2 data-i="demand.title" class="text-3xl font-extrabold text-ed mt-3"></h2>
+      <div class="mt-6 inline-flex p-1.5 rounded-2xl bg-slate-100">
+        <button id="tF" onclick="window.farmnexusApp.toggleRole('f')" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-ed text-white" data-i="demand.btn.farmer"></button>
+        <button id="tB" onclick="window.farmnexusApp.toggleRole('b')" class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600" data-i="demand.btn.buyer"></button>
+      </div>
+    </div>
+    <!-- Farmer View -->
+    <div id="fView" class="space-y-6">
+      <div class="bg-alab rounded-2xl p-4 border-2 flex flex-wrap gap-3 items-center justify-between">
+        <div id="cats" class="flex flex-wrap gap-2"></div>
+        <span id="quota" class="text-xs num font-bold text-slate-600"></span>
+      </div>
+      <div id="pCards" class="grid md:grid-cols-2 gap-6"></div>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-ed to-forest text-white">
+        <b data-i="demand.split.badge" class="num text-xs uppercase text-sprout"></b>
+        <h4 data-i="demand.split.title" class="text-xl font-extrabold mt-1"></h4>
+        <p data-i="demand.split.desc" class="text-sm text-cream mt-1"></p>
+        <div class="h-3 mt-3 bg-black/30 rounded-full overflow-hidden flex">
+          <div style="width:30%" class="bg-sprout"></div>
+          <div style="width:60%" class="bg-amber"></div>
+          <div style="width:10%" class="bg-orange-800"></div>
+        </div>
+        <p data-i="demand.split.calc" class="text-xs num mt-2 text-sl"></p>
+      </div>
+    </div>
+    <!-- Buyer View -->
+    <div id="bView" class="hidden max-w-3xl mx-auto bg-alab rounded-3xl p-6 border-2">
+      <h3 data-i="bform.title" class="text-xl font-extrabold text-ed mb-4"></h3>
+      <form onsubmit="window.farmnexusApp.postBuyerOrder(event)" class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label data-i="bform.company" class="lbl"></label>
+          <input id="bOrg" required class="inp">
+        </div>
+        <div>
+          <label data-i="bform.category" class="lbl"></label>
+          <select id="bCat" class="inp">
+            <option value="factory">Food Factory</option>
+            <option value="supermarket">Supermarket</option>
+            <option value="online">Online / Quick-Commerce</option>
+          </select>
+        </div>
+        <div>
+          <label data-i="bform.crop" class="lbl"></label>
+          <select id="bCrop" class="inp">
+            <option value="tomato">Tomato</option>
+            <option value="sugarcane">Sugarcane</option>
+            <option value="maize">Maize</option>
+            <option value="chilli">Red Chilli</option>
+            <option value="paddy">Paddy</option>
+          </select>
+        </div>
+        <div>
+          <label data-i="bform.volume" class="lbl"></label>
+          <input id="bQty" type="number" min="500" step="500" required class="inp">
+        </div>
+        <div>
+          <label data-i="bform.price" class="lbl"></label>
+          <input id="bPrice" type="number" step="0.1" min="1" required class="inp">
+        </div>
+        <div>
+          <label data-i="bform.hub" class="lbl"></label>
+          <input id="bHub" required class="inp">
+        </div>
+        <div class="sm:col-span-2">
+          <label data-i="bform.spec" class="lbl"></label>
+          <input id="bSpec" required class="inp">
+        </div>
+        <button class="btn sm:col-span-2 py-3" data-i="bform.btn"></button>
+      </form>
+      <p id="bMsg" class="hidden mt-4 p-3 rounded-xl bg-sl text-ed text-sm font-semibold"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ ZERO WASTE ══════════════════════ -->
+<section id="waste" class="py-16 bg-soil text-white border-b">
+  <div class="max-w-7xl mx-auto px-4">
+    <h2 data-i="waste.title" class="text-3xl font-extrabold text-center"></h2>
+    <p data-i="waste.sub" class="text-center mt-2 mb-8" style="color:#E6D7C3"></p>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white/10 rounded-2xl p-5 border border-white/15">
+        <b data-i="waste.c1.title"></b>
+        <div class="num text-2xl text-sprout mt-1">₹3.80/kg</div>
+        <p data-i="waste.c1.desc" class="text-xs mt-1 text-slate-200"></p>
+        <div data-i="waste.c1.buyer" class="text-[10px] mt-3 font-mono text-sl"></div>
+      </div>
+      <div class="bg-white/10 rounded-2xl p-5 border border-white/15">
+        <b data-i="waste.c2.title"></b>
+        <div class="num text-2xl text-sprout mt-1">₹6.50/kg</div>
+        <p data-i="waste.c2.desc" class="text-xs mt-1 text-slate-200"></p>
+        <div data-i="waste.c2.buyer" class="text-[10px] mt-3 font-mono text-sl"></div>
+      </div>
+      <div class="bg-white/10 rounded-2xl p-5 border border-white/15">
+        <b data-i="waste.c3.title"></b>
+        <div class="num text-2xl text-sprout mt-1">₹2.90/kg</div>
+        <p data-i="waste.c3.desc" class="text-xs mt-1 text-slate-200"></p>
+        <div data-i="waste.c3.buyer" class="text-[10px] mt-3 font-mono text-sl"></div>
+      </div>
+      <div class="bg-white/10 rounded-2xl p-5 border border-white/15">
+        <b data-i="waste.c4.title"></b>
+        <div class="num text-2xl text-sprout mt-1">₹8.00/kg</div>
+        <p data-i="waste.c4.desc" class="text-xs mt-1 text-slate-200"></p>
+        <div data-i="waste.c4.buyer" class="text-[10px] mt-3 font-mono text-sl"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ ONE CROP MANY INCOMES ══════════════════════ -->
+<section id="incomes" class="py-16 bg-white border-b">
+  <div class="max-w-7xl mx-auto px-4">
+    <h2 data-i="incomes.title" class="text-3xl font-extrabold text-ed text-center"></h2>
+    <p data-i="incomes.sub" class="text-center text-slate-600 mt-2 mb-8"></p>
+    <div class="grid md:grid-cols-4 gap-4 text-center">
+      <div class="card p-5">
+        <div class="num text-2xl font-extrabold text-ed">₹92,000</div>
+        <p data-i="incomes.c1.desc" class="text-xs mt-1 text-slate-600"></p>
+      </div>
+      <div class="card p-5">
+        <div class="num text-2xl font-extrabold text-ed">₹14,500</div>
+        <p data-i="incomes.c2.desc" class="text-xs mt-1 text-slate-600"></p>
+      </div>
+      <div class="card p-5">
+        <div class="num text-2xl font-extrabold text-sd">₹4,200</div>
+        <p data-i="incomes.c3.desc" class="text-xs mt-1 text-slate-600"></p>
+      </div>
+      <div class="card p-5 border-2 border-sprout bg-sl/20">
+        <div class="num text-2xl font-extrabold text-sd">₹1,10,700</div>
+        <p data-i="incomes.c4.desc" class="text-xs mt-1 font-bold text-ed"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ AGENTIC ARCHITECTURE ══════════════════════ -->
+<section id="agentic" class="py-16 bg-alab border-b">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center max-w-3xl mx-auto mb-10">
+      <span data-i="agentic.badge" class="px-3 py-1 rounded-full bg-sl text-ed text-xs num font-bold uppercase"></span>
+      <h2 data-i="agentic.title" class="text-3xl font-extrabold text-ed mt-3"></h2>
+      <p data-i="agentic.sub" class="text-slate-600 mt-2"></p>
+    </div>
+    <div class="grid md:grid-cols-4 gap-6">
+      <div class="card p-6 border-t-4 border-t-sprout">
+        <b data-i="agentic.c1.title" class="text-ed text-base"></b>
+        <div data-i="agentic.c1.ds" class="text-[10px] font-mono text-slate-400 mt-1 uppercase"></div>
+        <p data-i="agentic.c1.desc" class="text-xs text-slate-600 mt-3 leading-relaxed"></p>
+      </div>
+      <div class="card p-6 border-t-4 border-t-amber">
+        <b data-i="agentic.c2.title" class="text-ed text-base"></b>
+        <div data-i="agentic.c2.ds" class="text-[10px] font-mono text-slate-400 mt-1 uppercase"></div>
+        <p data-i="agentic.c2.desc" class="text-xs text-slate-600 mt-3 leading-relaxed"></p>
+      </div>
+      <div class="card p-6 border-t-4 border-t-ed">
+        <b data-i="agentic.c3.title" class="text-ed text-base"></b>
+        <div data-i="agentic.c3.ds" class="text-[10px] font-mono text-slate-400 mt-1 uppercase"></div>
+        <p data-i="agentic.c3.desc" class="text-xs text-slate-600 mt-3 leading-relaxed"></p>
+      </div>
+      <div class="card p-6 border-t-4 border-t-soil">
+        <b data-i="agentic.c4.title" class="text-ed text-base"></b>
+        <div data-i="agentic.c4.ds" class="text-[10px] font-mono text-slate-400 mt-1 uppercase"></div>
+        <p data-i="agentic.c4.desc" class="text-xs text-slate-600 mt-3 leading-relaxed"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ GLUT SIMULATOR ══════════════════════ -->
+<section id="sim" class="py-16 bg-white border-b">
+  <div class="max-w-4xl mx-auto px-4">
+    <h2 data-i="sim.title" class="text-3xl font-extrabold text-ed text-center"></h2>
+    <p data-i="sim.sub" class="text-center text-slate-600 mt-2 mb-6"></p>
+    <div class="card p-6">
+      <div class="flex justify-between items-center mb-2">
+        <span data-i="sim.lbl" class="lbl"></span>
+        <b id="sv" class="num text-ed text-lg font-bold">40%</b>
+      </div>
+      <input id="surge" type="range" min="0" max="100" value="40" oninput="window.farmnexusApp.simulateGlut()" class="w-full accent-ed cursor-pointer">
+      <div id="simChart" class="flex items-end gap-1 h-44 mt-6 px-1 bg-slate-50 rounded-xl p-2 border"></div>
+      <div class="flex flex-wrap gap-5 text-xs mt-4">
+        <span class="flex items-center gap-1.5"><i class="inline-block w-3 h-3 bg-red-400 rounded-sm"></i><span data-i="sim.leg1"></span></span>
+        <span class="flex items-center gap-1.5"><i class="inline-block w-3 h-3 bg-sprout rounded-sm"></i><span data-i="sim.leg2"></span></span>
+      </div>
+      <p id="simOut" class="text-sm font-bold text-ed mt-4 p-3 rounded-xl bg-sl/30"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<footer class="bg-ed text-cream text-center text-xs py-8 px-4">
+  <div class="max-w-7xl mx-auto space-y-2">
+    <p data-i="footer.copy"></p>
+    <p data-i="footer.bench" class="text-slate-400"></p>
+  </div>
+</footer>
+
+<script type="module" src="./js/app.js"></script>
+</body>
+</html>
